@@ -26,9 +26,16 @@ def main():
     args, n, since, path = [], 6, "0000", None
     it = iter(sys.argv[1:])
     for a in it:
-        if a == "--n": n = int(next(it))
-        elif a == "--since": since = next(it)
-        elif a == "--file": path = next(it)
+        if a in ("--n", "--since", "--file"):
+            v = next(it, None)
+            if v is None:
+                sys.exit(f"{a} 后面要跟一个值\n{__doc__}")
+            if a == "--n":
+                if not v.isdigit():
+                    sys.exit(f"--n 后面要跟数字，收到的是：{v}")
+                n = int(v)
+            elif a == "--since": since = v
+            else: path = v
         else: args.append(a)
     if not args or not path:
         print(__doc__); return
